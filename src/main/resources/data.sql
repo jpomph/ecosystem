@@ -1,0 +1,1 @@
+insert into species values ('wolf', 'c', 'rabbit', 50, 1, 12, 0.3, 0.3, 4, 1, 2);

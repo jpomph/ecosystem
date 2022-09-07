@@ -33,4 +33,7 @@ public class Species {
         this.gestation = gestation;
         this.reproduction_period = reproduction_period;
     }
+
+    public Species() {
+    }
 }

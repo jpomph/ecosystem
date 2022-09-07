@@ -1,13 +1,13 @@
 create table species
 (
-name char not null,
-type char not null,
-food char not null,
-requirement decimal,
+name char(16) not null,
+type char(1) not null,
+food char(16) not null,
+requirement integer,
 mature_age integer,
 senile_age integer,
-mature_risk decimal(3,2),
-senile_risk decimal(3,2),
+infant_survival decimal(3,2),
+senile_survival decimal(3,2),
 offspring integer,
 gestation integer,
 reproduction_period integer
