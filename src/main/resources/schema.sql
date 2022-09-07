@@ -10,5 +10,6 @@ infant_survival decimal(3,2),
 senile_survival decimal(3,2),
 offspring integer,
 gestation integer,
-reproduction_period integer
+reproduction_period integer,
+PRIMARY KEY (name)
 );
