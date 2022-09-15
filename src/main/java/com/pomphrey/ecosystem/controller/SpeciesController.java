@@ -26,6 +26,7 @@ public class SpeciesController {
             responseEntity = new ResponseEntity<>(species, HttpStatus.OK);
         }
         catch(Exception ex) {
+            System.out.println("ERROR: " + ex.getMessage());
             if(ex.getMessage().contains("Species Not Found")){
                 responseEntity = new ResponseEntity<>("Species Not Found", HttpStatus.BAD_REQUEST);
             } else {
@@ -48,6 +49,7 @@ public class SpeciesController {
             responseText = ex.toString();
         }
         catch(Exception ex) {
+            System.out.println("ERROR: " + ex.getMessage());
             if(ex.getMessage().contains("Unique index or primary key violation")){
                 responseText = "Record already exists";
             } else {

@@ -14,15 +14,7 @@ public class CarnivoreServices {
 
     public void checkDataIntegrity(Species species) throws DataIntegrityException {
 
-        //check that prey exists
-        try {
-            Species prey = speciesDao.querySingleSpecies(species.getFood());
-        }
-        catch(IllegalArgumentException ex){
-            if(ex.getMessage().contains("Species Not Found")){
-                throw new DataIntegrityException("Prey Not Found");
-            }
-        }
+        return;
     }
 
 }

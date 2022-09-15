@@ -10,8 +10,8 @@ public class Utils {
         species.setType("C");
         species.setFood("rabbit");
         species.setRequirement(50);
-        species.setMaturity_age(2);
-        species.setSenility_age(12);
+        species.setMature_age(2);
+        species.setSenile_age(12);
         species.setInfant_survival(0.3);
         species.setSenile_survival(0.3);
         species.setGestation(1);
