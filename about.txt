@@ -1,0 +1,6 @@
+Tables:
+- species: species-level information
+
+Endpoints:
+GET /species/{name}: get species-level information
+POST /species/add: insert species-level information

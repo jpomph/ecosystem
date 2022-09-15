@@ -1,7 +1,9 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.dao.SpeciesDao;
+import com.pomphrey.ecosystem.exception.DataIntegrityException;
 import com.pomphrey.ecosystem.model.Species;
+import com.pomphrey.ecosystem.service.CarnivoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,23 @@ public class SpeciesController {
     @Autowired
     SpeciesDao speciesDao;
 
+    @Autowired
+    CarnivoreServices carnivoreServices;
+
     @GetMapping("/species/{name}")
-    public ResponseEntity<Species> getSpeciesDetails(@PathVariable(value = "name") String name) {
-        //todo add exception handling
-        Species species = speciesDao.querySingleSpecies(name);
-        ResponseEntity responseEntity = new ResponseEntity<>(species, HttpStatus.OK);
+    public ResponseEntity getSpeciesDetails(@PathVariable(value = "name") String name) {
+        ResponseEntity responseEntity = null;
+        try {
+            Species species = speciesDao.querySingleSpecies(name);
+            responseEntity = new ResponseEntity<>(species, HttpStatus.OK);
+        }
+        catch(Exception ex) {
+            if(ex.getMessage().contains("Species Not Found")){
+                responseEntity = new ResponseEntity<>("Species Not Found", HttpStatus.BAD_REQUEST);
+            } else {
+                responseEntity = new ResponseEntity<>("Unhandled error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
         return responseEntity;
     }
 
@@ -25,12 +39,19 @@ public class SpeciesController {
     public ResponseEntity<String> addSpecies(@RequestBody Species species){
         String responseText = "OK";
         try{
+            if(species.getType().equalsIgnoreCase("C")) {
+                carnivoreServices.checkDataIntegrity(species);
+            }
             speciesDao.insertSpecies(species);
-        } catch(Exception ex) {
+        }
+        catch(DataIntegrityException ex){
+            responseText = ex.toString();
+        }
+        catch(Exception ex) {
             if(ex.getMessage().contains("Unique index or primary key violation")){
                 responseText = "Record already exists";
             } else {
-                responseText = "uUnhandled error";
+                responseText = "Unhandled error";
             }
         }
         ResponseEntity responseEntity = new ResponseEntity<>(responseText, HttpStatus.OK);

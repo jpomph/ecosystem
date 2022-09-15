@@ -20,6 +20,15 @@ public class Species {
     private int gestation;
     private int reproduction_period;
 
+    public void setType(String type) {
+        if(type.equalsIgnoreCase("C") || type.equalsIgnoreCase("H")){
+            this.type = type;
+        }
+        else {
+            throw new IllegalArgumentException("Invalid Species Type");
+        }
+    }
+
     public Species(String name, String type, String food, int requirement, int maturity_age, int senility_age, double infant_survival, double senile_survival, int offspring, int gestation, int reproduction_period) {
         this.name = name;
         this.type = type;

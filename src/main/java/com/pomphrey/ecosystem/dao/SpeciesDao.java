@@ -25,6 +25,9 @@ public class SpeciesDao {
 
         List<Species> speciesList;
         speciesList = template.query(query, params, new BeanPropertyRowMapper<>(Species.class));
+        if(speciesList.size()==0){
+            throw new IllegalArgumentException("Species Not Found");
+        }
         return speciesList.get(0);
     }
 
