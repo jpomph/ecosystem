@@ -47,4 +47,13 @@ public class SpeciesDao {
         template.update(query, params);
     }
 
+    public void deleteSpecies(Species species){
+        Map<String, String> params = new HashMap<>();
+        params.put("name", species.getName());
+
+        String query = "delete from species where name = :name";
+
+        template.update(query, params);
+    }
+
 }

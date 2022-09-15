@@ -60,4 +60,29 @@ public class SpeciesController {
         return responseEntity;
     }
 
+    @PostMapping("/species/update")
+    public ResponseEntity<String> updateSpecies(@RequestBody Species species){
+        String responseText = "OK";
+        try{
+            if(species.getType().equalsIgnoreCase("C")) {
+                carnivoreServices.checkDataIntegrity(species);
+            }
+            speciesDao.deleteSpecies(species);
+            speciesDao.insertSpecies(species);
+        }
+        catch(DataIntegrityException ex){
+            responseText = ex.toString();
+        }
+        catch(Exception ex) {
+            System.out.println("ERROR: " + ex.getMessage());
+            if(ex.getMessage().contains("Unique index or primary key violation")){
+                responseText = "Record already exists";
+            } else {
+                responseText = "Unhandled error";
+            }
+        }
+        ResponseEntity responseEntity = new ResponseEntity<>(responseText, HttpStatus.OK);
+        return responseEntity;
+    }
+
 }
