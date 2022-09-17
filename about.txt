@@ -7,7 +7,6 @@ POST /species/add: insert species-level information
 POST /species/update: update species-level information
 
 TODO -
-update tests
 reject "add" if already exists
 reject "update" if doesn't exist
 add consumption table

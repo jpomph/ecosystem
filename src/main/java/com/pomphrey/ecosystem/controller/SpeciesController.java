@@ -21,18 +21,11 @@ public class SpeciesController {
     @GetMapping("/species/{name}")
     public ResponseEntity getSpeciesDetails(@PathVariable(value = "name") String name) {
         ResponseEntity responseEntity = null;
-        try {
-//            Species species = speciesDao.querySingleSpecies(name);
-            Species species = speciesRepository.findByName(name);
+        Species species = speciesRepository.findByName(name);
+        if(species==null){
+            responseEntity = new ResponseEntity<>("Species not found", HttpStatus.BAD_REQUEST);
+        } else {
             responseEntity = new ResponseEntity<>(species, HttpStatus.OK);
-        }
-        catch(Exception ex) {
-            System.out.println("ERROR: " + ex.getMessage());
-            if(ex.getMessage().contains("Species Not Found")){
-                responseEntity = new ResponseEntity<>("Species Not Found", HttpStatus.BAD_REQUEST);
-            } else {
-                responseEntity = new ResponseEntity<>("Unhandled error", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
         }
         return responseEntity;
     }
