@@ -8,8 +8,6 @@ public class Utils {
         Species species = new Species();
         species.setName("wolf");
         species.setType("C");
-        species.setFood("rabbit");
-        species.setRequirement(50);
         species.setMature_age(2);
         species.setSenile_age(12);
         species.setInfant_survival(0.3);

@@ -1,6 +1,6 @@
 package com.pomphrey.ecosystem.controller;
 
-import com.pomphrey.ecosystem.dao.SpeciesDao;
+import com.pomphrey.ecosystem.dao.SpeciesRepository;
 import com.pomphrey.ecosystem.exception.DataIntegrityException;
 import com.pomphrey.ecosystem.model.Species;
 import com.pomphrey.ecosystem.service.CarnivoreServices;
@@ -13,16 +13,17 @@ import org.springframework.web.bind.annotation.*;
 public class SpeciesController {
 
     @Autowired
-    SpeciesDao speciesDao;
+    CarnivoreServices carnivoreServices;
 
     @Autowired
-    CarnivoreServices carnivoreServices;
+    SpeciesRepository speciesRepository;
 
     @GetMapping("/species/{name}")
     public ResponseEntity getSpeciesDetails(@PathVariable(value = "name") String name) {
         ResponseEntity responseEntity = null;
         try {
-            Species species = speciesDao.querySingleSpecies(name);
+//            Species species = speciesDao.querySingleSpecies(name);
+            Species species = speciesRepository.findByName(name);
             responseEntity = new ResponseEntity<>(species, HttpStatus.OK);
         }
         catch(Exception ex) {
@@ -43,7 +44,7 @@ public class SpeciesController {
             if(species.getType().equalsIgnoreCase("C")) {
                 carnivoreServices.checkDataIntegrity(species);
             }
-            speciesDao.insertSpecies(species);
+            speciesRepository.save(species);
         }
         catch(DataIntegrityException ex){
             responseText = ex.toString();
@@ -65,10 +66,10 @@ public class SpeciesController {
         String responseText = "OK";
         try{
             if(species.getType().equalsIgnoreCase("C")) {
+                //todo check that species exists
                 carnivoreServices.checkDataIntegrity(species);
             }
-            speciesDao.deleteSpecies(species);
-            speciesDao.insertSpecies(species);
+            speciesRepository.save(species);
         }
         catch(DataIntegrityException ex){
             responseText = ex.toString();

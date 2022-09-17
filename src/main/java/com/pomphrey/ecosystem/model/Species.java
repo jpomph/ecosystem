@@ -3,10 +3,14 @@ package com.pomphrey.ecosystem.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 @Getter
 @Setter
+@Entity
 public class Species {
-
+    @Id
     private String name;
     private String type;
     private int mature_age;

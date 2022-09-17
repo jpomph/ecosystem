@@ -1,6 +1,6 @@
 package com.pomphrey.ecosystem.controller;
 
-import com.pomphrey.ecosystem.dao.SpeciesDao;
+import com.pomphrey.ecosystem.dao.SpeciesRepository;
 import com.pomphrey.ecosystem.model.Species;
 import com.pomphrey.ecosystem.service.CarnivoreServices;
 import com.pomphrey.ecosystem.utils.Utils;
@@ -27,7 +27,7 @@ class SpeciesControllerTest {
     SpeciesController speciesController;
 
     @Mock
-    SpeciesDao mockSpeciesDao;
+    SpeciesRepository mockSpeciesRepository;
 
     @Mock
     CarnivoreServices MockCarnivoreServices;
@@ -40,7 +40,7 @@ class SpeciesControllerTest {
     @Test
     void testValidQueryReturnsValidObject(){
         String speciesName = "wolf";
-        when(mockSpeciesDao.querySingleSpecies(speciesName)).thenReturn(wolf);
+        when(mockSpeciesRepository.findByName(speciesName)).thenReturn(wolf);
         ResponseEntity responseEntity = speciesController.getSpeciesDetails(speciesName);
         assertEquals(wolf, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -49,7 +49,7 @@ class SpeciesControllerTest {
     @Test
     void testQueryNotFoundReturnsBadRequest(){
         String speciesName = "dragon";
-        when(mockSpeciesDao.querySingleSpecies(speciesName)).thenThrow(new IllegalArgumentException("Species Not Found"));
+        when(mockSpeciesRepository.findByName(speciesName)).thenThrow(new IllegalArgumentException("Species Not Found"));
         ResponseEntity responseEntity = speciesController.getSpeciesDetails(speciesName);
         assertEquals("Species Not Found", responseEntity.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -58,7 +58,7 @@ class SpeciesControllerTest {
     @Test
     void testUnhandledDbError(){
         String speciesName = "dragon";
-        when(mockSpeciesDao.querySingleSpecies(speciesName)).thenThrow(new IllegalArgumentException("Database Unavailable"));
+        when(mockSpeciesRepository.findByName(speciesName)).thenThrow(new IllegalArgumentException("Database Unavailable"));
         ResponseEntity responseEntity = speciesController.getSpeciesDetails(speciesName);
         assertEquals("Unhandled error", responseEntity.getBody());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
@@ -66,13 +66,13 @@ class SpeciesControllerTest {
 
     @Test
     void testValidInsert(){
-        doNothing().when(mockSpeciesDao).insertSpecies(wolf);
+//        doNothing().when(mockSpeciesRepository).save(wolf);
         ResponseEntity responseEntity = speciesController.addSpecies(wolf);
     }
 
     @Test
     void testInvalidInsert(){
-        doThrow(new IllegalArgumentException("")).when(mockSpeciesDao).insertSpecies(wolf);
+        doThrow(new IllegalArgumentException("")).when(mockSpeciesRepository).save(wolf);
         ResponseEntity responseEntity = speciesController.addSpecies(wolf);
         assertEquals("Unhandled error", responseEntity.getBody());
 

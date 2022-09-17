@@ -7,7 +7,9 @@ POST /species/add: insert species-level information
 POST /species/update: update species-level information
 
 TODO -
-change to use JPA
+update tests
+reject "add" if already exists
+reject "update" if doesn't exist
 add consumption table
 add endpoints for consumption table
 add plant table
