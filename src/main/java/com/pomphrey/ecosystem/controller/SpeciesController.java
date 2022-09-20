@@ -1,5 +1,6 @@
 package com.pomphrey.ecosystem.controller;
 
+import com.pomphrey.ecosystem.config.Constants;
 import com.pomphrey.ecosystem.dao.SpeciesRepository;
 import com.pomphrey.ecosystem.exception.DataIntegrityException;
 import com.pomphrey.ecosystem.model.Species;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 @RestController
 public class SpeciesController {
 
@@ -17,6 +20,9 @@ public class SpeciesController {
 
     @Autowired
     SpeciesRepository speciesRepository;
+
+    @Autowired
+    Constants constants;
 
     @GetMapping("/species/{name}")
     public ResponseEntity getSpeciesDetails(@PathVariable(value = "name") String name) {
@@ -30,52 +36,55 @@ public class SpeciesController {
         return responseEntity;
     }
 
+    @PostMapping("/species/delete/{name}")
+    @Transactional
+    public ResponseEntity deleteSpeciesDetails(@PathVariable(value = "name") String name) {
+        ResponseEntity responseEntity = null;
+        speciesRepository.deleteByName(name);
+        responseEntity = new ResponseEntity<>("Species deleted", HttpStatus.OK);
+        return responseEntity;
+    }
+
     @PostMapping("/species/add")
     public ResponseEntity<String> addSpecies(@RequestBody Species species){
-        String responseText = "OK";
-        try{
-            if(species.getType().equalsIgnoreCase("C")) {
-                carnivoreServices.checkDataIntegrity(species);
+        ResponseEntity responseEntity = null;
+        String responseText = "Species added";
+        if(speciesRepository.findByName(species.getName())!=null){
+            responseEntity = new ResponseEntity<>(constants.SPECIES_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+        } else {
+            try {
+                if (species.getType().equalsIgnoreCase("C")) {
+                    carnivoreServices.checkDataIntegrity(species);
+                }
+                speciesRepository.save(species);
+            } catch (DataIntegrityException ex) {
+                responseText = ex.toString();
+            } catch (Exception ex) {
+                responseText = ex.toString();
             }
-            speciesRepository.save(species);
+            responseEntity = new ResponseEntity<>(responseText, HttpStatus.OK);
         }
-        catch(DataIntegrityException ex){
-            responseText = ex.toString();
-        }
-        catch(Exception ex) {
-            System.out.println("ERROR: " + ex.getMessage());
-            if(ex.getMessage().contains("Unique index or primary key violation")){
-                responseText = "Record already exists";
-            } else {
-                responseText = "Unhandled error";
-            }
-        }
-        ResponseEntity responseEntity = new ResponseEntity<>(responseText, HttpStatus.OK);
+
         return responseEntity;
+
     }
 
     @PostMapping("/species/update")
     public ResponseEntity<String> updateSpecies(@RequestBody Species species){
-        String responseText = "OK";
-        try{
-            if(species.getType().equalsIgnoreCase("C")) {
-                //todo check that species exists
-                carnivoreServices.checkDataIntegrity(species);
-            }
-            speciesRepository.save(species);
-        }
-        catch(DataIntegrityException ex){
-            responseText = ex.toString();
-        }
-        catch(Exception ex) {
-            System.out.println("ERROR: " + ex.getMessage());
-            if(ex.getMessage().contains("Unique index or primary key violation")){
-                responseText = "Record already exists";
-            } else {
-                responseText = "Unhandled error";
+        ResponseEntity responseEntity = null;
+        if(speciesRepository.findByName(species.getName())==null) {
+            responseEntity = new ResponseEntity<>(constants.SPECIES_DOESNT_EXIST,HttpStatus.BAD_REQUEST);
+        } else {
+            try {
+                if (species.getType().equalsIgnoreCase("C")) {
+                    carnivoreServices.checkDataIntegrity(species);
+                }
+                speciesRepository.save(species);
+                responseEntity = new ResponseEntity<>(constants.SPECIES_UPDATED,HttpStatus.OK);
+            } catch (DataIntegrityException ex) {
+                responseEntity = new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
             }
         }
-        ResponseEntity responseEntity = new ResponseEntity<>(responseText, HttpStatus.OK);
         return responseEntity;
     }
 
