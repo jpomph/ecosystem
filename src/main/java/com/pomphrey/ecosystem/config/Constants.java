@@ -12,5 +12,9 @@ public class Constants {
     public String SPECIES_DOESNT_EXIST = "Species doesn't exist";
     public String INTERACTION_DOESNT_EXIST = "Interaction doesn't exist";
     public String SPECIES_UPDATED = "Species updated";
+    public String NO_CONDITION_FOUND = "No condition found";
+    public String CONDITION_DELETED = "Condition Deleted";
+    public String CONDITION_ALREADY_EXISTS = "Condition aready exists for this species";
+    public String CONDITION_ADDED = "Condition added";
 
 }

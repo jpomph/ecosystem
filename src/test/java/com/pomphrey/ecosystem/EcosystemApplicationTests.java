@@ -2,6 +2,7 @@ package com.pomphrey.ecosystem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pomphrey.ecosystem.config.Constants;
+import com.pomphrey.ecosystem.model.InitialCondition;
 import com.pomphrey.ecosystem.model.Interaction;
 import com.pomphrey.ecosystem.model.InteractionKey;
 import com.pomphrey.ecosystem.model.Species;
@@ -173,6 +174,45 @@ class EcosystemApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("grain")))
 				.andExpect(content().string(containsString("grass")));
+	}
+
+	@Test
+	void testQueryConditionWorks() throws Exception {
+		this.mockMvc.perform(get("/condition/query/wolf")).andDo(print()).andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("wolf")));
+	}
+
+	@Test
+	void addConditionWorks() throws Exception{
+		InitialCondition chickenCondition = Utils.createChickenCondition();
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/condition/add")
+						.content(asJsonString(chickenCondition)).contentType(MediaType.APPLICATION_JSON)).
+				andExpect(status().isOk());
+		this.mockMvc.perform(get("/condition/query/chicken")).andDo(print()).andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("chicken")));
+	}
+	@Test
+	void deleteConditionWorks() throws Exception{
+		InitialCondition chickenCondition = Utils.createChickenCondition();
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/condition/add")
+						.content(asJsonString(chickenCondition)).contentType(MediaType.APPLICATION_JSON)).
+				andExpect(status().isOk());
+		this.mockMvc.perform(get("/condition/delete/chicken")).andDo(print()).andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString(constants.CONDITION_DELETED)));
+		this.mockMvc.perform(get("/condition/query/chicken")).andDo(print()).andDo(print())
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(containsString(constants.NO_CONDITION_FOUND)));
+	}
+
+	@Test
+	void listConditionWorks() throws Exception{
+		this.mockMvc.perform(get("/condition/list")).andDo(print()).andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("wolf")))
+				.andExpect(content().string(containsString("rabbit")));
 	}
 
 	public static String asJsonString(final Object obj) {

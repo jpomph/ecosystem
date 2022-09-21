@@ -1,5 +1,6 @@
 package com.pomphrey.ecosystem.utils;
 
+import com.pomphrey.ecosystem.model.InitialCondition;
 import com.pomphrey.ecosystem.model.Interaction;
 import com.pomphrey.ecosystem.model.InteractionKey;
 import com.pomphrey.ecosystem.model.Species;
@@ -52,5 +53,13 @@ public class Utils {
         interaction.setAnnualAmount(1);
 
         return interaction;
+    }
+
+    public static InitialCondition createChickenCondition(){
+        return new InitialCondition("chicken", 10);
+    }
+
+    public static InitialCondition createTurkeyCondition(){
+        return new InitialCondition("turkey", 10);
     }
 }
