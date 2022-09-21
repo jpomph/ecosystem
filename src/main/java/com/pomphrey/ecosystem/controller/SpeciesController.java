@@ -3,7 +3,7 @@ package com.pomphrey.ecosystem.controller;
 import com.pomphrey.ecosystem.config.Constants;
 import com.pomphrey.ecosystem.dao.SpeciesRepository;
 import com.pomphrey.ecosystem.exception.DataIntegrityException;
-import com.pomphrey.ecosystem.model.Species;
+import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.service.CarnivoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

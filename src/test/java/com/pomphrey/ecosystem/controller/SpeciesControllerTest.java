@@ -1,7 +1,7 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.dao.SpeciesRepository;
-import com.pomphrey.ecosystem.model.Species;
+import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.service.CarnivoreServices;
 import com.pomphrey.ecosystem.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,20 +2,18 @@ package com.pomphrey.ecosystem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pomphrey.ecosystem.config.Constants;
-import com.pomphrey.ecosystem.model.InitialCondition;
-import com.pomphrey.ecosystem.model.Interaction;
-import com.pomphrey.ecosystem.model.InteractionKey;
-import com.pomphrey.ecosystem.model.Species;
+import com.pomphrey.ecosystem.model.configuration.InitialCondition;
+import com.pomphrey.ecosystem.model.configuration.Interaction;
+import com.pomphrey.ecosystem.model.configuration.InteractionKey;
+import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
@@ -23,7 +21,6 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,8 +31,8 @@ import static org.hamcrest.Matchers.containsString;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional(Transactional.TxType.REQUIRES_NEW)
-@Rollback(false)//@ExtendWith(SpringRunner.class)
-class EcosystemApplicationTests {
+//@Rollback(false)//@ExtendWith(SpringRunner.class)
+class IndividualApplicationTests {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -48,7 +45,7 @@ class EcosystemApplicationTests {
 	}
 
 	@Test
-	void findSpeciesReturnsoCorrectResponse() throws Exception{
+	void findSpeciesReturnsCorrectResponse() throws Exception{
 		this.mockMvc.perform(get("/species/wolf")).andDo(print()).andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("wolf")));
@@ -132,12 +129,13 @@ class EcosystemApplicationTests {
 	@Test
 	void addInteractionWorks() throws Exception{
 		Interaction newInteraction = Utils.createChickenGrainInteraction();
+		newInteraction.getInteractionKey().setSpecies1("chicken1");
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(get("/interaction/query").param("species1",newInteraction.getInteractionKey().getSpecies1()).
-						param(newInteraction.getInteractionKey().getSpecies2())).andDo(print()).andDo(print())
+						param("species2",newInteraction.getInteractionKey().getSpecies2())).andDo(print()).andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("chicken")));
+				.andExpect(content().string(containsString("chicken1")));
 	}
 
 	@Test

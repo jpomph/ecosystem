@@ -1,8 +1,7 @@
 package com.pomphrey.ecosystem.service;
 
 import com.pomphrey.ecosystem.exception.DataIntegrityException;
-import com.pomphrey.ecosystem.model.Species;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pomphrey.ecosystem.model.configuration.Species;
 import org.springframework.stereotype.Service;
 
 @Service

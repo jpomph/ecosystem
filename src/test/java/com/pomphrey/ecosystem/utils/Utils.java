@@ -1,11 +1,9 @@
 package com.pomphrey.ecosystem.utils;
 
-import com.pomphrey.ecosystem.model.InitialCondition;
-import com.pomphrey.ecosystem.model.Interaction;
-import com.pomphrey.ecosystem.model.InteractionKey;
-import com.pomphrey.ecosystem.model.Species;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import com.pomphrey.ecosystem.model.configuration.InitialCondition;
+import com.pomphrey.ecosystem.model.configuration.Interaction;
+import com.pomphrey.ecosystem.model.configuration.InteractionKey;
+import com.pomphrey.ecosystem.model.configuration.Species;
 
 public class Utils {
 
@@ -13,6 +11,7 @@ public class Utils {
         Species species = new Species();
         species.setName("wolf");
         species.setType("C");
+        species.setLifeExpectancy(14);
         species.setMature_age(2);
         species.setSenile_age(12);
         species.setInfant_survival(0.3);
@@ -27,6 +26,7 @@ public class Utils {
         Species species = new Species();
         species.setName("chicken");
         species.setType("C");
+        species.setLifeExpectancy(14);
         species.setMature_age(2);
         species.setSenile_age(12);
         species.setInfant_survival(0.3);

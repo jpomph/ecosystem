@@ -1,6 +1,6 @@
 package com.pomphrey.ecosystem.dao;
 
-import com.pomphrey.ecosystem.model.InitialCondition;
+import com.pomphrey.ecosystem.model.configuration.InitialCondition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

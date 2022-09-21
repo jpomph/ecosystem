@@ -1,7 +1,7 @@
 package com.pomphrey.ecosystem.dao;
 
 
-import com.pomphrey.ecosystem.model.Species;
+import com.pomphrey.ecosystem.model.configuration.Species;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

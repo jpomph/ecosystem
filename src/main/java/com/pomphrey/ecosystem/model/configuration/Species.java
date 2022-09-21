@@ -1,4 +1,4 @@
-package com.pomphrey.ecosystem.model;
+package com.pomphrey.ecosystem.model.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +13,7 @@ public class Species {
     @Id
     private String name;
     private String type;
+    private int lifeExpectancy;
     private int mature_age;
     private int senile_age;
     private double infant_survival;

@@ -1,4 +1,4 @@
-package com.pomphrey.ecosystem.model;
+package com.pomphrey.ecosystem.model.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -14,8 +14,8 @@ add initial_conditions table
 add endpoints for initial conditions table
 add calculation of ages spread
 add individual class (name, age, health)
-add ecosystem class (={individual})
-add endpoint to create ecosystem
+add individual class (={individual})
+add endpoint to create individual
 add annual process (dummy)
 add endpoint to execute annual process n times
 create output file
