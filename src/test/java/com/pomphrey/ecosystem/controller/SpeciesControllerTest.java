@@ -1,8 +1,8 @@
 package com.pomphrey.ecosystem.controller;
 
-import com.pomphrey.ecosystem.dao.SpeciesRepository;
+import com.pomphrey.ecosystem.repository.SpeciesRepository;
 import com.pomphrey.ecosystem.model.configuration.Species;
-import com.pomphrey.ecosystem.service.CarnivoreServices;
+import com.pomphrey.ecosystem.util.CarnivoreUtils;
 import com.pomphrey.ecosystem.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class SpeciesControllerTest {
     SpeciesRepository mockSpeciesRepository;
 
     @Mock
-    CarnivoreServices MockCarnivoreServices;
+    CarnivoreUtils mockCarnivoreUtils;
 
     @BeforeEach
     public void setUp(){

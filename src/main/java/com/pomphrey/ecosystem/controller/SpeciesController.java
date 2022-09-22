@@ -1,10 +1,10 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.config.Constants;
-import com.pomphrey.ecosystem.dao.SpeciesRepository;
+import com.pomphrey.ecosystem.repository.SpeciesRepository;
 import com.pomphrey.ecosystem.exception.DataIntegrityException;
 import com.pomphrey.ecosystem.model.configuration.Species;
-import com.pomphrey.ecosystem.service.CarnivoreServices;
+import com.pomphrey.ecosystem.util.CarnivoreUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 public class SpeciesController {
 
     @Autowired
-    CarnivoreServices carnivoreServices;
+    CarnivoreUtils carnivoreUtils;
 
     @Autowired
     SpeciesRepository speciesRepository;
@@ -54,7 +54,7 @@ public class SpeciesController {
         } else {
             try {
                 if (species.getType().equalsIgnoreCase("C")) {
-                    carnivoreServices.checkDataIntegrity(species);
+                    carnivoreUtils.checkDataIntegrity(species);
                 }
                 speciesRepository.save(species);
             } catch (DataIntegrityException ex) {
@@ -77,7 +77,7 @@ public class SpeciesController {
         } else {
             try {
                 if (species.getType().equalsIgnoreCase("C")) {
-                    carnivoreServices.checkDataIntegrity(species);
+                    carnivoreUtils.checkDataIntegrity(species);
                 }
                 speciesRepository.save(species);
                 responseEntity = new ResponseEntity<>(constants.SPECIES_UPDATED,HttpStatus.OK);

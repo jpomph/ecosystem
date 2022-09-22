@@ -1,7 +1,7 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.config.Constants;
-import com.pomphrey.ecosystem.dao.InitialConditionRepository;
+import com.pomphrey.ecosystem.repository.InitialConditionRepository;
 import com.pomphrey.ecosystem.model.configuration.InitialCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

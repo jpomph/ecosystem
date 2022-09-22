@@ -1,7 +1,7 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.config.Constants;
-import com.pomphrey.ecosystem.dao.InteractionRepository;
+import com.pomphrey.ecosystem.repository.InteractionRepository;
 import com.pomphrey.ecosystem.model.configuration.Interaction;
 import com.pomphrey.ecosystem.model.configuration.InteractionKey;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,44 +1,35 @@
 package com.pomphrey.ecosystem.service;
 
-import com.pomphrey.ecosystem.model.configuration.Species;
+import com.pomphrey.ecosystem.model.worldstate.Individual;
+import com.pomphrey.ecosystem.repository.SpeciesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class GeneralServices {
 
-    public static List<Integer> calculateAgeSpread(Species species, int count){
-        if(count> species.getLifeExpectancy()){
-            return calculateAgesCountGreaterThanLifeExpectancy(species, count);
-        } else {
-            return calculateAgesCountLessThanLifeExpectancy(species, count);
-        }
+    @Autowired
+    SpeciesRepository speciesRepository;
+
+    public void processSingleYear(List<Individual> individuals) {
+        ageAllIndividualsOneYear(individuals);
     }
 
-    private static List<Integer> calculateAgesCountGreaterThanLifeExpectancy(Species species, int count){
-        int pointer = 0;
-        List ageList = new ArrayList<>();
-        for(int i=0; i < count; i++){
-            ageList.add(pointer);
-            pointer ++;
-            if(pointer>species.getLifeExpectancy()){
-                pointer = 0;
+    public void ageAllIndividualsOneYear(List<Individual> individuals){
+        List<Integer> deadList = new ArrayList<>();
+        for(int i=0; i<individuals.size(); i++){
+            if(individuals.get(i).getAge() >= (speciesRepository.findByName(individuals.get(i).getSpecies()).getLifeExpectancy()-1)){
+                deadList.add(i);
+            } else {
+                individuals.get(i).setAge(individuals.get(i).getAge()+1);
             }
         }
-        return ageList;
-    }
-
-    private static List<Integer> calculateAgesCountLessThanLifeExpectancy(Species species, int count){
-        int increment = species.getLifeExpectancy() / count;
-        int addedCount = 0;
-        List ageList = new ArrayList<>();
-        for(int i=increment; i <= species.getLifeExpectancy() && addedCount < count; i = i + increment){
-            ageList.add(i);
-            addedCount ++;
+        for(int i=0; i<deadList.size(); i++){
+            individuals.remove(i);
         }
-        return ageList;
     }
-
 
 }

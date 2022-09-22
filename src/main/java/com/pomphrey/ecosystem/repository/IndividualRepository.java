@@ -1,4 +1,4 @@
-package com.pomphrey.ecosystem.dao;
+package com.pomphrey.ecosystem.repository;
 
 import com.pomphrey.ecosystem.model.worldstate.Individual;
 import org.springframework.data.jpa.repository.JpaRepository;
