@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GeneralServices {
@@ -38,19 +40,16 @@ public class GeneralServices {
     }
 
     public List<Summary> generateSummary(List<Individual> individuals, Ecosystem ecosystem){
+
         List<Summary> speciesSummary = new ArrayList<>();
-        for (Individual individual: individuals){
-            boolean newEntry = true;
-            for (Summary summary: speciesSummary) {
-                if (summary.getSummaryKey().getSpecies().equalsIgnoreCase(individual.getSpecies())) {
-                    summary.setIndividualCount(summary.getIndividualCount() + 1);
-                    newEntry = false;
-                }
-            }
-            if(newEntry){
-                speciesSummary.add(new Summary(new SummaryKey(ecosystem.getDate(), individual.getSpecies()), 1));
-            }
-        }
+
+        Map<String, List<Individual>> groupedIndividuals = individuals.stream()
+                .collect(Collectors.groupingBy(Individual::getSpecies));
+
+        groupedIndividuals.forEach((species, list)->{
+            speciesSummary.add(new Summary(new SummaryKey(ecosystem.getDate(), species), list.size()));
+        });
+
         return speciesSummary;
     }
 
