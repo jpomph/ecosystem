@@ -1,10 +1,8 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.model.worldstate.Ecosystem;
-import com.pomphrey.ecosystem.repository.EcosystemRepository;
-import com.pomphrey.ecosystem.repository.IndividualRepository;
-import com.pomphrey.ecosystem.repository.InitialConditionRepository;
-import com.pomphrey.ecosystem.repository.SpeciesRepository;
+import com.pomphrey.ecosystem.model.worldstate.Summary;
+import com.pomphrey.ecosystem.repository.*;
 import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.model.worldstate.Individual;
 import com.pomphrey.ecosystem.service.GeneralServices;
@@ -35,6 +33,9 @@ public class RunController {
 
     @Autowired
     GeneralServices generalServices;
+
+    @Autowired
+    SummaryRepository summaryRepository;
 
     @GetMapping("/ecosystem/create")
     public ResponseEntity createEcosystem() {
@@ -68,10 +69,17 @@ public class RunController {
     @GetMapping("/ecosystem/process/year")
     public ResponseEntity processOneYear() {
         List<Individual> individuals = individualRepository.findAll();
-        generalServices.processSingleYear(individuals);
+        Ecosystem ecosystem = ecosystemRepository.findAll().get(0);
+        generalServices.processSingleYear(individuals, ecosystem);
+        ecosystemRepository.save(ecosystem);
         individualRepository.deleteAll();
         individualRepository.saveAll(individuals);
-        return new ResponseEntity("Processed 1 year", HttpStatus.OK);
+
+        //Generate summary
+        List<Summary> summary = generalServices.generateSummary(individuals, ecosystem);
+        summaryRepository.saveAll(summary);
+
+        return new ResponseEntity(summary, HttpStatus.OK);
     }
 
 
