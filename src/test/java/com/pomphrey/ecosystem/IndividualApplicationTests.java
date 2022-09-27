@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pomphrey.ecosystem.config.Constants;
 import com.pomphrey.ecosystem.model.configuration.InitialCondition;
 import com.pomphrey.ecosystem.model.configuration.Interaction;
-import com.pomphrey.ecosystem.model.configuration.InteractionKey;
+import com.pomphrey.ecosystem.model.configuration.InteractionJson;
 import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.utils.Utils;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -128,46 +127,58 @@ class IndividualApplicationTests {
 
 	@Test
 	void addInteractionWorks() throws Exception{
-		Interaction newInteraction = Utils.createChickenGrainInteraction();
-		newInteraction.getInteractionKey().setSpecies1("chicken1");
+		InteractionJson newInteraction = new InteractionJson(Utils.createChickenGrainInteraction());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrass())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrain())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createChickeen())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-		this.mockMvc.perform(get("/interaction/query").param("species1",newInteraction.getInteractionKey().getSpecies1()).
-						param("species2",newInteraction.getInteractionKey().getSpecies2())).andDo(print()).andDo(print())
+		this.mockMvc.perform(get("/interaction/query").param("species1",newInteraction.getConsumer()).
+						param("species2",newInteraction.getConsumed())).andDo(print()).andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("chicken1")));
+				.andExpect(content().string(containsString("chicken" +
+						"")));
 	}
 
 	@Test
 	void addExistingInteractionReturnsCorrectError() throws Exception{
-		Interaction newInteraction = new Interaction(new InteractionKey("wolf","rabbit"),"p",356);
+		InteractionJson newInteraction = new InteractionJson(new Interaction(Utils.createWolf(), Utils.createChickeen(),"p",356));
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createChickeen())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
+				.content(asJsonString(newInteraction)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
 				.andExpect(content().string(containsString(constants.INTERACTION_ALREADY_EXISTS)));
-		;
 
 	}
 
 	@Test
 	void deleteInteractionWorks() throws Exception{
-		Interaction newInteraction = Utils.createChickenGrainInteraction();
+
+		InteractionJson newInteraction = new InteractionJson(Utils.createChickenGrainInteraction());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrass())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrain())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createChickeen())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-		this.mockMvc.perform(get("/interaction/delete").param("species1",newInteraction.getInteractionKey().getSpecies1()).
-						param("species2",newInteraction.getInteractionKey().getSpecies2())).andDo(print()).andDo(print())
+		this.mockMvc.perform(get("/interaction/delete").param("species1",newInteraction.getConsumer()).
+						param("species2",newInteraction.getConsumed())).andDo(print()).andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("deleted")));
 	}
 
 	@Test
 	void listInteractionWorks() throws Exception{
-		Interaction newInteraction1 = Utils.createChickenGrainInteraction();
-		Interaction newInteraction2 = Utils.createChickenGrassInteraction();
+		InteractionJson newInteraction1 = new InteractionJson(Utils.createChickenGrainInteraction());
+		InteractionJson newInteraction2 = new InteractionJson(Utils.createChickenGrassInteraction());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrass())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createGrain())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/species/add").content(asJsonString(Utils.createChickeen())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction1)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/interaction/add")
 				.content(asJsonString(newInteraction2)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-		this.mockMvc.perform(get("/interaction/list").param("species1",newInteraction1.getInteractionKey().getSpecies1()))
+		this.mockMvc.perform(get("/interaction/list").param("species1",newInteraction1.getConsumer()))
 				.andDo(print()).andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("grain")))

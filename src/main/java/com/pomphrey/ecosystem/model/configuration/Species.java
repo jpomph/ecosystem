@@ -1,10 +1,13 @@
 package com.pomphrey.ecosystem.model.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,9 +24,14 @@ public class Species {
     private int offspring;
     private int gestation;
     private int reproduction_period;
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "consumer")
+    private List<Interaction> consumerInteractions;
+    @JsonIgnore
+    @OneToMany(mappedBy = "consumed")
+    private List<Interaction> consumedInteractions;
     public void setType(String type) {
-        if(type.equalsIgnoreCase("C") || type.equalsIgnoreCase("H")){
+        if(type.equalsIgnoreCase("C") || type.equalsIgnoreCase("H") || type.equalsIgnoreCase("P")){
             this.type = type;
         }
         else {

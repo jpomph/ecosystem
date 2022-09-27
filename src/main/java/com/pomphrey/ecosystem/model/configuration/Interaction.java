@@ -5,24 +5,38 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class Interaction {
 
-    @EmbeddedId
-    InteractionKey interactionKey;
+    @Id
+    @GeneratedValue
+    int interactionId;
+
+    @ManyToOne
+    @JoinColumn(name = "consumer")
+    Species consumer;
+
+    @ManyToOne
+    @JoinColumn(name = "consumed")
+    Species consumed;
 
     String interactionType;
     // p = predation
     // h = herbivory
 
     int annualAmount;
+
+    public Interaction(Species consumer, Species consumed, String interactionType, int annualAmount){
+        this.consumer = consumer;
+        this.consumed = consumed;
+        setInteractionType(interactionType);
+        this.annualAmount = annualAmount;
+    }
 
     public void setInteractionType(String interactionType) throws IllegalArgumentException{
         if (interactionType.equalsIgnoreCase("P") || interactionType.equalsIgnoreCase("H")){
