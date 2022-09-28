@@ -1,6 +1,7 @@
 package com.pomphrey.ecosystem.controller;
 
 import com.pomphrey.ecosystem.model.worldstate.Ecosystem;
+import com.pomphrey.ecosystem.model.worldstate.Population;
 import com.pomphrey.ecosystem.model.worldstate.Summary;
 import com.pomphrey.ecosystem.repository.*;
 import com.pomphrey.ecosystem.model.configuration.Species;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -42,15 +44,19 @@ public class RunController {
         //delete any existing ecosystem
         individualRepository.deleteAll();
         //create the ecosystem
-        ecosystemRepository.save(new Ecosystem());
+        Ecosystem ecosystem = new Ecosystem();
         //get all species from initial conditions table and create the corresponding number of individuals
         conditionRepository.findAll().forEach(condition -> {
             Species species = speciesRepository.findByName(condition.getSpecies());
+            Population population = new Population(species, ecosystem);
             List<Integer> ageList = GeneralUtils.calculateAgeSpread(species, condition.getIndividualCount());
             for(int i=0; i<condition.getIndividualCount(); i++){
-                individualRepository.save(new Individual(condition.getSpecies(),ageList.get(i)));
+                population.addIndividual(new Individual(condition.getSpecies(),ageList.get(i), population));
             }
+            ecosystem.addPopulation(population);
         });
+        ecosystemRepository.save(ecosystem);
+
         return new ResponseEntity("Ecosystem generated", HttpStatus.OK);
     }
 
