@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Species control page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <h2>Species</h2>
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>Species</th>
+                <th>Type</th>
+                <th>Life Expectancy</th>
+                <th>Maturity Age</th>
+                <th>Senility Age</th>
+                <th>Infant Survival Multiplier</th>
+                <th>Senile Survival Multiplier</th>
+                <th>No. Offspring Per Female</th>
+                <th>Gestation Period</th>
+                <th>Years Per Birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="species: ${speciesList}">
+                <td th:text="${species.name}"></td>
+                <td th:text="${species.type}"></td>
+                <td th:text="${species.lifeExpectancy}"></td>
+                <td th:text="${species.mature_age}"></td>
+                <td th:text="${species.senile_age}"></td>
+                <td th:text="${species.infant_survival}"></td>
+                <td th:text="${species.senile_survival}"></td>
+                <td th:text="${species.offspring}"></td>
+                <td th:text="${species.gestation}"></td>
+                <td th:text="${species.reproduction_period}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

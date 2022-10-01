@@ -20,4 +20,8 @@ public class SummaryKey implements Serializable {
 
     String species;
 
+    public int getYear(){
+        return date.getYear();
+    }
+
 }

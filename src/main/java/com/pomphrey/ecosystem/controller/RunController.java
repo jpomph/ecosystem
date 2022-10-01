@@ -1,11 +1,13 @@
 package com.pomphrey.ecosystem.controller;
 
+import com.pomphrey.ecosystem.exception.EcosystemNotExistException;
 import com.pomphrey.ecosystem.model.worldstate.Ecosystem;
 import com.pomphrey.ecosystem.model.worldstate.Population;
 import com.pomphrey.ecosystem.model.worldstate.Summary;
 import com.pomphrey.ecosystem.repository.*;
 import com.pomphrey.ecosystem.model.configuration.Species;
 import com.pomphrey.ecosystem.model.worldstate.Individual;
+import com.pomphrey.ecosystem.service.EcosystemService;
 import com.pomphrey.ecosystem.service.GeneralServices;
 import com.pomphrey.ecosystem.util.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import java.util.List;
 
 @Controller
 public class RunController {
+
+    @Autowired
+    EcosystemService ecosystemService;
 
     @Autowired
     IndividualRepository individualRepository;
@@ -41,21 +46,8 @@ public class RunController {
 
     @GetMapping("/ecosystem/create")
     public ResponseEntity createEcosystem() {
-        //delete any existing ecosystem
-        individualRepository.deleteAll();
-        //create the ecosystem
-        Ecosystem ecosystem = new Ecosystem();
-        //get all species from initial conditions table and create the corresponding number of individuals
-        conditionRepository.findAll().forEach(condition -> {
-            Species species = speciesRepository.findByName(condition.getSpecies());
-            Population population = new Population(species, ecosystem);
-            List<Integer> ageList = GeneralUtils.calculateAgeSpread(species, condition.getIndividualCount());
-            for(int i=0; i<condition.getIndividualCount(); i++){
-                population.addIndividual(new Individual(condition.getSpecies(),ageList.get(i), population));
-            }
-            ecosystem.addPopulation(population);
-        });
-        ecosystemRepository.save(ecosystem);
+
+        ecosystemService.initialiseEcosystem();
 
         return new ResponseEntity("Ecosystem generated", HttpStatus.OK);
     }
@@ -67,25 +59,16 @@ public class RunController {
     }
 
     @GetMapping("/ecosystem/query/date")
-    public ResponseEntity queryEcosystemDate() {
-        LocalDate date = ecosystemRepository.findAll().get(0).getDate();
+    public ResponseEntity queryEcosystemDate() throws EcosystemNotExistException {
+        LocalDate date = ecosystemService.getEcosystem().getDate();
         return new ResponseEntity(date, HttpStatus.OK);
     }
 
     @GetMapping("/ecosystem/process/year")
     public ResponseEntity processOneYear() {
-        List<Individual> individuals = individualRepository.findAll();
-        Ecosystem ecosystem = ecosystemRepository.findAll().get(0);
-        generalServices.processSingleYear(individuals, ecosystem);
-        ecosystemRepository.save(ecosystem);
-        individualRepository.deleteAll();
-        individualRepository.saveAll(individuals);
+        ecosystemService.processOneYear();
 
-        //Generate summary
-        List<Summary> summary = generalServices.generateSummary(individuals, ecosystem);
-        summaryRepository.saveAll(summary);
-
-        return new ResponseEntity(summary, HttpStatus.OK);
+        return new ResponseEntity(summaryRepository.findAll(), HttpStatus.OK);
     }
 
 

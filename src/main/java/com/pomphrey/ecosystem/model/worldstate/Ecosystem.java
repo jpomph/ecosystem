@@ -25,7 +25,6 @@ public class Ecosystem {
     @OneToMany(mappedBy = "ecosystem", cascade = CascadeType.ALL)
     List<Population> populations;
 
-
     public Ecosystem(){
         date = LocalDate.of(2000,1,1);
         populations = new ArrayList<>();
@@ -33,6 +32,10 @@ public class Ecosystem {
 
     public void addPopulation(Population population){
         populations.add(population);
+    }
+
+    public int getAgeInYears(){
+        return date.getYear() - 2000;
     }
 
 }

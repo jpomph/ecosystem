@@ -42,4 +42,8 @@ public class Population {
     public void addIndividual(Individual individual){
         individuals.add(individual);
     }
+
+    public int getPopulationCount(){
+        return individuals.size();
+    }
 }

@@ -47,4 +47,12 @@ public class Interaction {
         this.interactionType = interactionType;
     }
 
+    public String getInteractionTypeFormatted(){
+        if(interactionType.equalsIgnoreCase("C")){
+            return "Carnivory";
+        } else {
+            return "Herbivory";
+        }
+    }
+
 }

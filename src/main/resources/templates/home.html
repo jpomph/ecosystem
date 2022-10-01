@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Ecosystem Control Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div>
+        <h2>Ecosystem Status</h2>
+        <table>
+            <thead>
+                <tr th:if="${ecosystemExists}">
+                    <th>Date</th>
+                    <th th:text="${ecosystemDate}"></th>
+                </tr>
+                <tr th:unless="${ecosystemExists}">
+                    <th>Ecosystem not yet started</th>
+                </tr>
+            </thead>
+        </table>
+        <form action="#" th:action="@{/home}" th:object="${initialiseForm}" method="get">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button name="initialise" type="submit" value="1">Initialise ecosystem</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <form action="#" th:action="@{/home}" th:object="${processOneYearForm}" method="get">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button name="processOneYear" type="submit" value="1">Process One Year</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div>
+        <h2>Initial Conditions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Species</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="condition: ${conditions}">
+                    <td th:text="${condition.species}"></td>
+                    <td th:text="${condition.individualCount}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Species interactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Consumer</th>
+                    <th>Consumed</th>
+                    <th>Interaction Type</th>
+                    <th>Annual requirement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="interaction: ${interactions}">
+                    <td th:text="${interaction.consumer.name}"></td>
+                    <td th:text="${interaction.consumed.name}"></td>
+                    <td th:text="${interaction.interactionTypeFormatted}"></td>
+                    <td th:text="${interaction.annualAmount}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Populations</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Species</th>
+                <th>Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="population: ${populations}">
+                <td th:text="${population.speciesName}"></td>
+                <td th:text="${population.populationCount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Population graph</h2>
+        <img th:src="${chartUrl}" width="500" height="500">
+    </div>
+
+</body>
+</html>

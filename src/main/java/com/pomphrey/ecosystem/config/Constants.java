@@ -16,5 +16,7 @@ public class Constants {
     public String CONDITION_DELETED = "Condition Deleted";
     public String CONDITION_ALREADY_EXISTS = "Condition aready exists for this species";
     public String CONDITION_ADDED = "Condition added";
+    public String ECOSYSTEM_NOT_EXIST = "Ecosystem hasn't been created yet";
+
 
 }

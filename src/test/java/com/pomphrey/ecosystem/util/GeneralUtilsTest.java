@@ -32,7 +32,7 @@ class GeneralUtilsTest {
 
         wolf.setLifeExpectancy(10);
         count = 10;
-        expectedAges = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        expectedAges = Arrays.asList(0,1,2,3,4,5,6,7,8,9);
         calculatedAges = GeneralUtils.calculateAgeSpread(wolf, count);
         assertEquals(expectedAges,calculatedAges);
 
@@ -47,19 +47,19 @@ class GeneralUtilsTest {
 
         wolf.setLifeExpectancy(5);
         count = 6;
-        expectedAges = Arrays.asList(0,1,2,3,4,5);
+        expectedAges = Arrays.asList(0,1,2,3,4,0);
         calculatedAges = GeneralUtils.calculateAgeSpread(wolf, count);
         assertEquals(expectedAges,calculatedAges);
 
         wolf.setLifeExpectancy(5);
         count = 10;
-        expectedAges = Arrays.asList(0,1,2,3,4,5,0,1,2,3);
+        expectedAges = Arrays.asList(0,1,2,3,4,0,1,2,3,4);
         calculatedAges = GeneralUtils.calculateAgeSpread(wolf, count);
         assertEquals(expectedAges,calculatedAges);
 
         wolf.setLifeExpectancy(5);
         count = 13;
-        expectedAges = Arrays.asList(0,1,2,3,4,5,0,1,2,3,4,5,0);
+        expectedAges = Arrays.asList(0,1,2,3,4,0,1,2,3,4,0,1,2);
         calculatedAges = GeneralUtils.calculateAgeSpread(wolf, count);
         assertEquals(expectedAges,calculatedAges);
 
